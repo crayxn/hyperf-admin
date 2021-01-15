@@ -16,7 +16,7 @@ class IndexController extends BaseController
     public function index()
     {
         $user = $this->userInfo();
-        $menu = SysMenu::getListByAuth(explode(",", $user->authorize ?? ""));
+        $menu = $user->id == 1 ? SysMenu::getList() :SysMenu::getListByAuth(explode(",", $user->authorize ?? ""));
         return $this->view([
             "user" => $user,
             "v" => date("md"),

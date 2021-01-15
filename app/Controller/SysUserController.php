@@ -52,11 +52,11 @@ class SysUserController extends BaseController
             $validator = $this->validationFactory->make(
                 $param,
                 [
-                    'phone' => 'required',
+                    'name' => 'required',
                     'password' => 'required|min:6',
                 ],
                 [
-                    'phone.required' => '手机号码不能为空',
+                    'name.required' => '账户不能为空',
                     'password.required' => '请输入正确密码',
                     'password.min' => '请输入正确密码',
                 ]
@@ -65,7 +65,7 @@ class SysUserController extends BaseController
             if ($validator->fails()) {
                 return $this->error($validator->errors()->first());
             }
-            $user = SysUser::query()->where("phone", "=", $param['phone'])->first();
+            $user = SysUser::query()->where("name", "=", $param['name'])->first();
             if (!$user) return $this->error("登陆失败,稍后重试");
             if ($user->password != md5($user->salt . $param['password'])) return $this->error("账户或密码错误,请重新输入");
             $token = $this->auth->guard("jwt")->login($user);
@@ -178,7 +178,7 @@ class SysUserController extends BaseController
                 ],
                 [
                     'phone.required' => '手机号码不能为空',
-                    'name.required' => '名字不能为空',
+                    'name.required' => '账户名称不能为空',
                 ]
             );
 
@@ -186,6 +186,8 @@ class SysUserController extends BaseController
                 return $this->error($validator->errors()->first());
             }
             $salt = md5($param['phone'] . time());
+            $is_exist = SysUser::query()->where("name","=",$param['name'])->first();
+            if($is_exist) return $this->error("添加失败,账户已被使用");
             $res = SysUser::query()->insert([
                 "phone" => $param['phone'],
                 "name" => $param['name'],

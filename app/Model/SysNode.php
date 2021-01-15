@@ -74,6 +74,9 @@ class SysNode extends Model
                     self::query()->where("id", "=", $item['id'])->update(['is_on' => 0]);
                 }
             }
+            foreach ($node as &$item) {
+                $item['created_at'] = $item['updated_at'] = time();
+            }
             self::query()->insert($node);
             //清除缓存
             ApplicationContext::getContainer()->get(Redis::class)->del("auth_nodes");

@@ -8,8 +8,8 @@
             </div>
             <div class="layui-col-xs5">
                 <label class="block relative">
-                    <span class="font-w7">用户名称</span>
-                    <input name="name" value="{{ $user['name'] ?? '' }}" required placeholder="请输入用户名称" class="layui-input">
+                    <span class="font-w7">账户名称</span>
+                    <input name="name" value="{{ $user['name'] ?? '' }}" required placeholder="请输入账户名称" class="layui-input">
                     <span class="help-block">用户显示的账号别名，请尽量保持不要重复</span>
                 </label>
             </div>

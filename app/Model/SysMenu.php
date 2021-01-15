@@ -20,7 +20,7 @@ class SysMenu extends Model
     {
         //获取节点
         $nodes = SysNode::getNodes();
-        $menus = SysMenu::query()->where("status","=",1)->orderByDesc("sort")->get()->toArray();
+        $menus = self::getList();
         $pass_nodes = SysAuth::getNodeByAuth($auths);
         foreach ($menus as $key => $item) {
             if (in_array($item['url'], $nodes) && !in_array($item['url'], $pass_nodes)) {
@@ -28,5 +28,9 @@ class SysMenu extends Model
             }
         }
         return $menus;
+    }
+
+    public static function getList(){
+        return SysMenu::query()->where("status","=",1)->orderByDesc("sort")->get()->toArray();
     }
 }

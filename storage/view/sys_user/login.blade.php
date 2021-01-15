@@ -8,7 +8,7 @@
         }
         .login {
             font-family: "MicrosoftYaHei";
-            background: url(https://crmimageoss.returnsaas.com/p_apm/bg.png) no-repeat;
+            background: url("http://cdn.craon.cn/bg.png") no-repeat;
             background-size: cover;
             position: relative;
             height: 900px;
@@ -23,7 +23,7 @@
             margin: 0 auto;
             width: 360px;
             height: 390px;
-            background: rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, .95);
             box-shadow: 1px 5px 32px 4px rgba(43, 42, 42, 0.43);
             border-radius: 15px;
             display: flex;
@@ -90,7 +90,7 @@
                   class="form content layui-form animated fadeInDown">
                 @_token()
                 <div class="user">
-                    <input name="phone" type="text" autofocus="autofocus" autocomplete="off" placeholder="请输入手机号">
+                    <input name="name" type="text" autofocus="autofocus" autocomplete="off" placeholder="请输入账号">
                 </div>
                 <div class="pwd">
                     <input name="password" type="password" placeholder="请输入密码">

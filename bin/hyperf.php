@@ -18,5 +18,8 @@ require BASE_PATH . '/vendor/autoload.php';
     $container = require BASE_PATH . '/config/container.php';
 
     $application = $container->get(\Hyperf\Contract\ApplicationInterface::class);
+    //执行节点更新
+    $application->find("ser:node")->run(new \Symfony\Component\Console\Input\ArrayInput([]),new \Symfony\Component\Console\Output\NullOutput());
+    //运行程序
     $application->run();
 })();
