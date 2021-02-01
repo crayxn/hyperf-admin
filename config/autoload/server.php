@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 use Hyperf\Server\Server;
-use Hyperf\Server\SwooleEvent;
+use Hyperf\Server\Event;
 
 return [
     'mode' => SWOOLE_PROCESS,
@@ -24,9 +24,24 @@ return [
             'port' => 9501,
             'sock_type' => SWOOLE_SOCK_TCP,
             'callbacks' => [
-                SwooleEvent::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
-            ],
+                Event::ON_REQUEST => [Hyperf\HttpServer\Server::class, 'onRequest'],
+            ]
         ],
+        [
+            'name' => 'jsonrpc',
+            'type' => Server::SERVER_BASE,
+            'host' => '0.0.0.0',
+            'port' => 9503,
+            'sock_type' => SWOOLE_SOCK_TCP,
+            'callbacks' => [
+                Event::ON_RECEIVE => [\Hyperf\JsonRpc\TcpServer::class, 'onReceive'],
+            ],
+            'settings' => [
+                'open_eof_split' => true,
+                'package_eof' => "\r\n",
+                'package_max_length' => 1024 * 1024 * 2,
+            ],
+        ]
     ],
     'settings' => [
         'enable_coroutine' => true,
@@ -50,11 +65,11 @@ return [
         'task_enable_coroutine' => false,
     ],
     'callbacks' => [
-        SwooleEvent::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],
-        SwooleEvent::ON_PIPE_MESSAGE => [Hyperf\Framework\Bootstrap\PipeMessageCallback::class, 'onPipeMessage'],
-        SwooleEvent::ON_WORKER_EXIT => [Hyperf\Framework\Bootstrap\WorkerExitCallback::class, 'onWorkerExit'],
+        Event::ON_WORKER_START => [Hyperf\Framework\Bootstrap\WorkerStartCallback::class, 'onWorkerStart'],
+        Event::ON_PIPE_MESSAGE => [Hyperf\Framework\Bootstrap\PipeMessageCallback::class, 'onPipeMessage'],
+        Event::ON_WORKER_EXIT => [Hyperf\Framework\Bootstrap\WorkerExitCallback::class, 'onWorkerExit'],
         // Task callbacks
-        SwooleEvent::ON_TASK => [Hyperf\Framework\Bootstrap\TaskCallback::class, 'onTask'],
-        SwooleEvent::ON_FINISH => [Hyperf\Framework\Bootstrap\FinishCallback::class, 'onFinish'],
+        Event::ON_TASK => [Hyperf\Framework\Bootstrap\TaskCallback::class, 'onTask'],
+        Event::ON_FINISH => [Hyperf\Framework\Bootstrap\FinishCallback::class, 'onFinish'],
     ],
 ];

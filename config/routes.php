@@ -23,5 +23,6 @@ Router::get('/tool/upload', 'App\Controller\ToolController@upload');
 Router::post('/tool/upload_state', 'App\Controller\ToolController@upload_state');
 
 Router::get('/test', function () {
-
+    $serivce = \Hyperf\Utils\ApplicationContext::getContainer()->get(\App\Rpc\CalculatorServiceInterface::class);
+    return $serivce->add(1,2);
 });
