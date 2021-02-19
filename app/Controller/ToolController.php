@@ -79,4 +79,13 @@ class ToolController extends BaseController
         }
         return $this->success('获取授权参数', $data, 404);
     }
+
+    /**
+     * 导出模板
+     * @return array|\Psr\Http\Message\ResponseInterface
+     */
+    public function export()
+    {
+        return $this->view($this->request->query());
+    }
 }
