@@ -138,14 +138,14 @@ abstract class BaseController
 
     /**
      * 分页
-     * @param \Hyperf\Database\Model\Builder
+     * @param mixed $db
      * @param array $data
      * @param int $limit
      * @param string $template
      * @param string $order
      * @return \Psr\Http\Message\ResponseInterface
      */
-    protected function paginate(\Hyperf\Database\Model\Builder $db, array $data = [], $limit = 0, string $template = '', string $order = 'id')
+    protected function paginate($db, array $data = [], $limit = 0, string $template = '', string $order = 'id')
     {
         if (!$this->request->input("page", false)) {
             return $this->view($data, $template);
@@ -156,8 +156,8 @@ abstract class BaseController
             $limit = $this->request->input('limit', 10);
         }
 
-        $pager = $db->where("is_deleted", "=", 0)
-            ->orderByDesc($order)
+        $pager = $db->where('is_deleted',0)
+            ->orderBy($order,'desc')
             ->paginate(intval($limit));
         return $this->success("", [
             'list' => $pager->items(),

@@ -12,6 +12,7 @@
 namespace App\Model;
 
 
+use Hyperf\Scout\Searchable;
 use Qbhy\HyperfAuth\Authenticatable;
 
 /**
@@ -20,6 +21,8 @@ use Qbhy\HyperfAuth\Authenticatable;
  */
 class SysUser extends Model implements Authenticatable
 {
+    use Searchable;
+
     protected $table = "sys_user";
 
 

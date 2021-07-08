@@ -29,19 +29,10 @@
                       onsubmit="return false" method="get">
 
                     <div class="layui-form-item layui-inline">
-                        <label class="layui-form-label">用户账号</label>
-                        <div class="layui-input-inline">
-                            <input name="name" value="{{$param['name'] ?? ''}}"
-                                   placeholder="请输入用户名"
-                                   class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-form-item layui-inline">
-                        <label class="layui-form-label">联系手机</label>
+                        <label class="layui-form-label">关键词搜索</label>
                         <div class="layui-input-inline">
                             <input name="phone" value="{{$param['phone'] ?? ''}}"
-                                   placeholder="请输入联系手机"
+                                   placeholder="请输入关键词"
                                    class="layui-input">
                         </div>
                     </div>

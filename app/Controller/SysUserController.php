@@ -150,12 +150,14 @@ class SysUserController extends BaseController
      * @Middlewares({
      *     @Middleware(Csrf::class)
      * })
-     * @return \Psr\Http\Message\ResponseInterface
+//     * @return \Psr\Http\Message\ResponseInterface
      */
     public function index()
     {
-        $query = SysUser::query()
-            ->where("id", "<>", 0);
+        $param = $this->request->query();
+        $query = SysUser::search($param['phone']  ?? '');
+//            ->paginate(1);
+//        return [$query->total(),$query];
         return $this->paginate($query, ["title" => "用户管理"]);
     }
 
@@ -186,18 +188,19 @@ class SysUserController extends BaseController
                 return $this->error($validator->errors()->first());
             }
             $salt = md5($param['phone'] . time());
-            $is_exist = SysUser::query()->where("name","=",$param['name'])->first();
-            if($is_exist) return $this->error("添加失败,账户已被使用");
-            $res = SysUser::query()->insert([
-                "phone" => $param['phone'],
-                "name" => $param['name'],
-                "avatar" => $param['avatar'] ?? "",
-                "remark" => $param['remark'] ?? "",
-                "authorize" => implode(",", $param['authorize'] ?? []),
-                "salt" => $salt,
-                "password" => md5($salt . $param['phone']),
-            ]);
-            return $res ? $this->success("添加成功") : $this->error("添加失败,稍后重试");
+            if (SysUser::query()->where("name", "=", $param['name'])->first()) {
+                return $this->error("添加失败,账户已被使用");
+            }
+            $user = new SysUser();
+            $user->phone = $param['phone'];
+            $user->name = $param['name'];
+            $user->avatar = $param['avatar'] ?? '';
+            $user->remark = $param['remark'] ?? '';
+            $user->authorize = implode(",", $param['authorize'] ?? []);
+            $user->salt = $salt;
+            $user->password = md5($salt . $param['phone']);
+            $user->is_deleted = 0;
+            return $user->save() ? $this->success("添加成功") : $this->error("添加失败,稍后重试");
         }
         return $this->view([
             "authorizes" => SysAuth::query()->pluck("name", "id")
@@ -291,7 +294,11 @@ class SysUserController extends BaseController
     public function del()
     {
         $id = $this->request->post("id", "");
-        SysUser::query()->whereIn("id", explode(",", $id))->update(['is_deleted' => 1]);
+        $users = SysUser::query()->whereIn("id", explode(",", $id))->get();
+        foreach ($users as $user){
+            $user->is_deleted = 1;
+            $user->save();
+        }
         return $this->success();
     }
 
